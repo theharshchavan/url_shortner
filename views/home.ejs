@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/style.css">
+    <title>URL Shortener</title>
+</head>
+<body>
+    <!-- Header -->
+    <header>
+        <div class="container">
+            <div class="logo">URL Shortener</div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main>
+        <div class="container">
+            <!-- URL Shortener Form -->
+            <div class="shortener-card">
+                <div class="shortener-form">
+                    <form id="urlForm" action="/shorturl" method="POST">
+                        <div class="input-group">
+                            <input type="url" name="longUrl" placeholder="Enter your long URL here..." required>
+                            <button class="btn" type="submit">Shorten URL</button>
+                        </div>
+                    </form>
+                </div>
+
+                <!-- Success / Error Message -->
+                <% if (typeof message !== 'undefined' && message) { %>
+                    <div class="alert-message"><%= message %></div>
+                <% } %>
+
+                <!-- Results Display -->
+                <% if (Array.isArray(shortenedUrls) && shortenedUrls.length > 0) { %>
+                    <h3 class="results-title">Your shortened URLs</h3>
+                    <div class="results-list">
+                        <% shortenedUrls.forEach(function(item) { %>
+                            <div class="result-item">
+                                <div class="url-details">
+                                    <div class="original-url"><%= item.originalUrl %></div>
+                                    <div class="short-url"><%= item.shortUrl %></div>
+                                </div>
+                                <button class="copy-btn" onclick="copyToClipboard('<%= item.shortUrl %>')">Copy</button>
+                            </div>
+                        <% }); %>
+                    </div>
+                <% } %>
+            </div>
+        </div>
+    </main>
+
+    <!-- Simple Footer -->
+    <footer>
+        <div class="container">
+            &copy; 2025 URL Shortener. All rights reserved.
+        </div>
+    </footer>
+
+    <!-- Copy Script -->
+    <script>
+       function copyToClipboard(text) {
+        navigator.clipboard.writeText(text)
+            .then(() => {
+                alert("Short URL copied to clipboard!");
+
+                // ✅ Optional: redirect to the shortened URL
+                // window.location.href = text; // Uncomment this if you want automatic redirection
+
+                // ✅ Optional: reset the form
+                document.getElementById("urlForm").reset();
+
+                // ✅ Optional: clear success message and shortened results after few seconds
+                setTimeout(() => {
+                    document.querySelector(".alert-message")?.remove();
+                    document.querySelector(".results-list")?.remove();
+                    document.querySelector(".results-title")?.remove();
+                }, 2000);
+            })
+            .catch(err => alert("Failed to copy: " + err));
+    }
+    </script>
+</body>
+</html>
