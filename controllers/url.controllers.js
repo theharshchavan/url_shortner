@@ -15,7 +15,7 @@ async function handleToShortUrl(req, res) {
         });
 
         // Dynamically get domain for deployment (localhost or deployed domain)
-        const host = 'bti.x';
+        const host = req.headers.host;
         const protocol = req.protocol;
 
         res.status(200).render("home", {
